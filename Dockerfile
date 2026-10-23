@@ -1,7 +1,7 @@
 FROM php:8.3-cli-alpine
 
 RUN apk add --no-cache sqlite-dev oniguruma-dev \
-    && docker-php-ext-install pdo pdo_sqlite sqlite3 mbstring
+    && docker-php-ext-install pdo_sqlite sqlite3 mbstring
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
