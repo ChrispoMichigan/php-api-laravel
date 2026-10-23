@@ -1,0 +1,894 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Linktree API",
+        "description": "API REST de ejemplo (CRUD) para un clon de Linktree: usuarios, catálogo de redes sociales y los enlaces sociales de cada usuario.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Servidor actual"
+        }
+    ],
+    "paths": {
+        "/api/social-platforms": {
+            "get": {
+                "tags": [
+                    "Social Platforms"
+                ],
+                "summary": "Listar redes sociales del catálogo",
+                "description": "Devuelve un listado paginado de plataformas (Instagram, Facebook, etc). Permite buscar por nombre o slug.",
+                "operationId": "bc571d223d207e2429e5e39de14ea932",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Texto a buscar en name o slug",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de resultados por página (1-100)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número de página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Listado paginado de plataformas"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Social Platforms"
+                ],
+                "summary": "Crear una red social en el catálogo",
+                "operationId": "05d4bfec6a938dc3350beeda8eb3cab2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "slug"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Instagram"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "instagram"
+                                    },
+                                    "base_url": {
+                                        "type": "string",
+                                        "example": "https://instagram.com/",
+                                        "nullable": true
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "example": "fa-brands fa-instagram",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Plataforma creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SocialPlatform"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            }
+        },
+        "/api/social-platforms/{social_platform_id}": {
+            "get": {
+                "tags": [
+                    "Social Platforms"
+                ],
+                "summary": "Ver una red social del catálogo",
+                "operationId": "f909e0c9ea0698495763599b28086fe9",
+                "parameters": [
+                    {
+                        "name": "social_platform_id",
+                        "in": "path",
+                        "description": "ID numérico de la plataforma (no el slug)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Plataforma encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SocialPlatform"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Plataforma no encontrada"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Social Platforms"
+                ],
+                "summary": "Actualizar una red social del catálogo",
+                "operationId": "60250514b6f83ad2c7e84774f4f5bcc7",
+                "parameters": [
+                    {
+                        "name": "social_platform_id",
+                        "in": "path",
+                        "description": "ID numérico de la plataforma (no el slug)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Instagram"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "instagram"
+                                    },
+                                    "base_url": {
+                                        "type": "string",
+                                        "example": "https://instagram.com/",
+                                        "nullable": true
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "example": "fa-brands fa-instagram",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Plataforma actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SocialPlatform"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Plataforma no encontrada"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Social Platforms"
+                ],
+                "summary": "Eliminar una red social del catálogo",
+                "description": "Elimina la plataforma y, en cascada, todos los enlaces de usuarios que la referencian.",
+                "operationId": "e96e2501c74938fc6f922abeb71dd709",
+                "parameters": [
+                    {
+                        "name": "social_platform_id",
+                        "in": "path",
+                        "description": "ID numérico de la plataforma (no el slug)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Plataforma eliminada"
+                    },
+                    "404": {
+                        "description": "Plataforma no encontrada"
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Listar usuarios",
+                "description": "Devuelve un listado paginado de usuarios. Permite buscar por nombre, username o email.",
+                "operationId": "566aed8efb436ca506e0ef51a032ecd9",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Texto a buscar en name, username o email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de resultados por página (1-100)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número de página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Listado paginado de usuarios"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Registrar un usuario",
+                "operationId": "be551c1d694a01c164966f58bfa77013",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Christian Castillo"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "example": "christian",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "christian@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            }
+        },
+        "/api/users/{user_id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Ver un usuario",
+                "description": "Devuelve un usuario junto con sus enlaces de redes sociales.",
+                "operationId": "d8ba9a1287a241a18672eef2eecd1f3d",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "ID numérico del usuario (no el username)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuario encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Actualizar un usuario",
+                "operationId": "9d9eb9bb2252bad06b6f18a21a251e0f",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "ID numérico del usuario (no el username)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Christian Castillo"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "example": "christian",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "christian@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newpassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuario actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Eliminar un usuario",
+                "description": "Elimina el usuario y, en cascada, todos sus enlaces de redes sociales.",
+                "operationId": "ea98c76bf835b20efbeead3ad21dad8b",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "ID numérico del usuario (no el username)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Usuario eliminado"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                }
+            }
+        },
+        "/api/users/{user_id}/social-links": {
+            "get": {
+                "tags": [
+                    "User Social Links"
+                ],
+                "summary": "Listar los enlaces sociales de un usuario",
+                "description": "Devuelve un listado paginado de los enlaces de redes sociales del usuario. Permite buscar por handle, título, url o nombre de la plataforma.",
+                "operationId": "9a3d755334aa331eae4f6efeffeb3ead",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "ID numérico del usuario (no el username)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Texto a buscar en handle, title, url o el nombre de la plataforma",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de resultados por página (1-100)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número de página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Listado paginado de enlaces sociales"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User Social Links"
+                ],
+                "summary": "Agregar un enlace social a un usuario",
+                "operationId": "43bf885fd1fd8aefd96847bf06ef00dd",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "ID numérico del usuario (no el username)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "social_platform_id",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "social_platform_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://instagram.com/christian"
+                                    },
+                                    "handle": {
+                                        "type": "string",
+                                        "example": "@christian",
+                                        "nullable": true
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Mi Instagram",
+                                        "nullable": true
+                                    },
+                                    "position": {
+                                        "type": "integer",
+                                        "example": 0
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Enlace creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserSocialLink"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            }
+        },
+        "/api/social-links/{social_link_id}": {
+            "get": {
+                "tags": [
+                    "User Social Links"
+                ],
+                "summary": "Ver un enlace social",
+                "operationId": "677a613f5a2f48a8ed323b3c98070e0a",
+                "parameters": [
+                    {
+                        "name": "social_link_id",
+                        "in": "path",
+                        "description": "ID numérico del enlace social",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Enlace encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserSocialLink"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Enlace no encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "User Social Links"
+                ],
+                "summary": "Actualizar un enlace social",
+                "operationId": "8998ef27b2964f76fb613fdc27e5f6dc",
+                "parameters": [
+                    {
+                        "name": "social_link_id",
+                        "in": "path",
+                        "description": "ID numérico del enlace social",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "social_platform_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://instagram.com/christian"
+                                    },
+                                    "handle": {
+                                        "type": "string",
+                                        "example": "@christian",
+                                        "nullable": true
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Mi Instagram",
+                                        "nullable": true
+                                    },
+                                    "position": {
+                                        "type": "integer",
+                                        "example": 0
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Enlace actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserSocialLink"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Enlace no encontrado"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User Social Links"
+                ],
+                "summary": "Eliminar un enlace social",
+                "operationId": "6c7513bee1f760e4f4ad12404c433fa0",
+                "parameters": [
+                    {
+                        "name": "social_link_id",
+                        "in": "path",
+                        "description": "ID numérico del enlace social",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Enlace eliminado"
+                    },
+                    "404": {
+                        "description": "Enlace no encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "SocialPlatform": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Instagram"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "instagram"
+                    },
+                    "base_url": {
+                        "type": "string",
+                        "example": "https://instagram.com/",
+                        "nullable": true
+                    },
+                    "icon": {
+                        "type": "string",
+                        "example": "fa-brands fa-instagram",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Christian Castillo"
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "christian",
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "christian@example.com"
+                    },
+                    "social_links": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UserSocialLink"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "UserSocialLink": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "social_platform_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "url": {
+                        "type": "string",
+                        "example": "https://instagram.com/christian"
+                    },
+                    "handle": {
+                        "type": "string",
+                        "example": "@christian",
+                        "nullable": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Mi Instagram",
+                        "nullable": true
+                    },
+                    "position": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "social_platform": {
+                        "$ref": "#/components/schemas/SocialPlatform"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Users",
+            "description": "Gestión de usuarios"
+        },
+        {
+            "name": "Social Platforms",
+            "description": "Catálogo de redes sociales disponibles"
+        },
+        {
+            "name": "User Social Links",
+            "description": "Enlaces de redes sociales de un usuario"
+        }
+    ]
+}

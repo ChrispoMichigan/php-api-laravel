@@ -1,27 +1,17 @@
 <?php
 
+use App\Http\Controllers\Api\SocialPlatformController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserSocialLinkController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 Route::get('/', function () {
     return response()->json([
         'success' => true,
-        'message' => 'API en Funcionamiento'
+        'message' => 'API en Funcionamiento',
     ], 200);
 });
 
-
-Route::post('/', function (Request $request) {
-
-    $nombre = $request->input('nombre');
-    $email = $request->input('email');
-
-    Log::info($nombre);
-    Log::info($email);
-
-    return response()->json([
-        'nombre' => $nombre,
-        'email' => $email
-    ], 200);
-});
+Route::apiResource('users', UserController::class);
+Route::apiResource('social-platforms', SocialPlatformController::class);
+Route::apiResource('users.social-links', UserSocialLinkController::class)->shallow();
